@@ -1,8 +1,8 @@
 // login.js
 'use strict';
 
-// Initializes EasyChat.
-function EasyChat() {
+// Initializes Dokoma.
+function Dokoma() {
   this.checkSetup();
 
   // Shortcuts to DOM Elements.
@@ -16,21 +16,21 @@ function EasyChat() {
 }
 
 // Sets up Firebase features.
-EasyChat.prototype.initFirebase = function() {
+Dokoma.prototype.initFirebase = function() {
   // TODO : 11. 認証を追加
   this.auth = firebase.auth();
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
 };
 
-// Signs-in Easy Chat.
-EasyChat.prototype.signIn = function() {
+// Signs-in Dokoma.
+Dokoma.prototype.signIn = function() {
   // TODO : 11. サインインボタン
   var provider = new firebase.auth.GoogleAuthProvider();
   this.auth.signInWithPopup(provider);
 };
 
 // Triggers when the auth state change for instance when the user signs-in or signs-out.
-EasyChat.prototype.onAuthStateChanged = function(user) {
+Dokoma.prototype.onAuthStateChanged = function(user) {
   if (user) {
     // ログイン成功時にチャット画面に遷移
     window.location.href = './';
@@ -38,7 +38,7 @@ EasyChat.prototype.onAuthStateChanged = function(user) {
 };
 
 // Checks that the Firebase SDK has been correctly setup and configured.
-EasyChat.prototype.checkSetup = function() {
+Dokoma.prototype.checkSetup = function() {
   if (!window.firebase || !(firebase.app instanceof Function) || !firebase.app().options) {
     window.alert('You have not configured and imported the Firebase SDK. ' +
       'Make sure you go through the codelab setup instructions and make ' +
@@ -47,6 +47,6 @@ EasyChat.prototype.checkSetup = function() {
 };
 
 window.onload = function() {
-  // Initializes EasyChat.
-  window.easyChat = new EasyChat();
+  // Initializes Dokoma.
+  window.Dokoma = new Dokoma();
 };
