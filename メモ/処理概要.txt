@@ -1,0 +1,22 @@
+処理概要
+
+①部屋URL生成
+　
+　・URLを表示してに設定
+　・URLの地図ページを生成
+
+②地図ページにアクセス時、認証
+
+③位置情報取得
+　ピン建て変数に設定
+　→google api に渡す
+　　→渡したことを確認したら、fire baseに挿入
+　　
+
+
+④fire base
+
+
+
+<!-- Initialize Firebase -->
+<script src="/__/firebase/init.js"></script>
