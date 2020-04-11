@@ -1,11 +1,11 @@
 {
   "version": "1.0.0",
-  "name": "Fasy Chat",
+  "name": "Dokoma",
   "launch_path": "/index.html",
-  "description": "Easy Chat with Firebase",
+  "description": "Dokoma with Firebase",
   "developer": {
-    "name": "kappa0923",
-    "url": "https://gihub.com/kappa0923"
+    "name": "rohto4 and kisoninja",
+    "url": "https://github.com/rohto4/dokoma_clone"
   },
   "installs_allowed_from": [
     "*"
@@ -15,7 +15,7 @@
   },
   "locales": {
     "ja": {
-      "name": "Easy Chat",
+      "name": "Dokoma",
       "description": "Create chat app easily using Firebase 2.0"
     }
   }
