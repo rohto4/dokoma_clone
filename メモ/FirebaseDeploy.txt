@@ -1,0 +1,42 @@
+
+○[**XXXXX]には固有名を代入
+
+
+
+--cloud shell コマンドライン
+cd ~/cloudshell_open/[**PROJECT_ID]
+firebase logout
+firebase login --no-localhost
+yes
+
+--別ウィンドウ
+・表示された長いURLにアクセス
+（クリックではなく、コピーして貼り付ける）
+・googleログイン
+・KEYをコピー
+
+--cloud shell コマンドライン
+firebase use [**PROJECT_ID]
+
+--ブラウザ操作（※作成済みの場合
+プロジェクトの設定 > （</>）をクリック
+☆cloudshellの場合
+　　htmlファイルに貼る「～init～」の一行だけコピペ
+☆localの場合
+　　1～4に従う
+
+firebase serve
+
+
+【補足】
+PROJECT_IDの表示場所
+https://console.firebase.google.com/project/[プロジェクト名]/settings/general
+cloudshell 
+
+◎"firebase serve"実施前の状態
+・htmlファイルにfirebase関連スクリプトを呼び出す<script>タグがあること
+例.
+<script defer src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/6.6.0/firebase-auth.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/6.6.0/firebase-firestore.js"></script>
+<script defer src="/__/firebase/init.js"></script>

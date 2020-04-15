@@ -1,6 +1,6 @@
 // 初期地図の設定
 function initMap() {
-    print('initMap');
+    console.log('initMap');
 
     initIdo = "32.6811673";
     initKdo = "138.7670516";
@@ -17,8 +17,9 @@ function initMap() {
 
 }
 
+/*
 function latestMyMerkar() {
-    print('latestMyMerkar');
+    console.log('latestMyMerkar');
     // 現在地取得
     myIdo = "138.715802";
     myKdo = "32.766500";
@@ -34,22 +35,8 @@ function latestMyMerkar() {
     });
 
 }
+*/
 
 function getMembersMarker() {
-    print('getMembersMarker');
+    console.log('getMembersMarker');
 }
-
-// 吹き出しを開く
-google.maps.event.addListener(myInfoWindow, "click", function() {
-    print('click open');
-    myInfoWindow.open(map, myMarker);
-});
-
-// 吹き出しクローズ時処理
-google.maps.event.addListener(myInfoWindow, "closeclick", function() {
-    print('click close');
-    // クリックで開くよう再設定
-    google.maps.event.addListenerOnce(myMarker, "click", function(event) {
-        myInfoWindow.open(map, myMarker);
-    });　
-});

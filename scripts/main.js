@@ -5,37 +5,32 @@
 function Dokoma() {
   this.checkSetup();
   this.initFirebase();
+  method1();
 }
 
-// Firebaseの設定
-Dokoma.prototype.initFirebase = function() {
-  // ★DB接続
-  this.firestore = firebase.firestore();
-
-  // ★認証
-  this.auth = firebase.auth();
-  this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
-};
-
+/*
 Dokoma.prototype.map = function(e) {
   e.preventDefault();
 }
+*/
+
 
 // 現在地を設定した時、fasebaseに情報を登録する
-Dokoma.prototype.saveLocation = function(e) {
+Dokoma.prototype.saveMarker = function(savedata) {
   // ★DB書き込み
-  if (this.mapInput.value) {
-    this.firestore.collection('map').add({
-      name: "User Name",
-      locate_ido: this.locate_ido.value,
-      locate_kdo: this.locate_kdo.value,
-      timestamp: new Date()
+  if (savedata) {
+    this.firestore.collection('userMarker').add({
+      name: savedata['name'],
+      lat: savedata['lat'],
+      lng: savedata['lng'],
+      time: savedata['time']
     })
     .catch(function(error) {
       console.error("Error adding document: ", error);
     });
   }
 }
+
 
 // サインイン、サインアウト時にトリガ
 Dokoma.prototype.onAuthStateChanged = function(user) {
@@ -45,12 +40,13 @@ Dokoma.prototype.onAuthStateChanged = function(user) {
   }
 };
 
-// Displays a Map UI.
+/*
+// Mapを表示
 Dokoma.prototype.displayMap = function(key, name, locate_ido, locate_kdo) {
   var div = document.getElementById(key);
   div.querySelector('#map').textContent = myMap;
-
 };
+*/
 
 // Firebase SDKの動作チェック
 Dokoma.prototype.checkSetup = function() {
@@ -61,7 +57,18 @@ Dokoma.prototype.checkSetup = function() {
   }
 };
 
+// Firebaseの設定
+Dokoma.prototype.initFirebase = function() {
+  // ★DB接続
+  this.firestore = firebase.firestore();
+//   Dokoma.firestore = firebase.firestore();
+
+  // ★認証
+  this.auth = firebase.auth();
+  this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+};
+
 window.onload = function() {
   // Initializes Dokoma.
-  window.easyChat = new Dokoma();
+  window.dokoma = new Dokoma();
 };
