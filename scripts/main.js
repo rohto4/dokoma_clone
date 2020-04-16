@@ -1,19 +1,15 @@
 // main.js
+// firebase周りの処理を記載するファイル
 'use strict';
 
-// Initializes Dokoma.
+/***** 関数構造の説明を最下部に記載 *****/
+
+// Dokomaファンクションの初期化
 function Dokoma() {
   this.checkSetup();
   this.initFirebase();
-  method1();
+  setMyMarker();
 }
-
-/*
-Dokoma.prototype.map = function(e) {
-  e.preventDefault();
-}
-*/
-
 
 // 現在地を設定した時、fasebaseに情報を登録する
 Dokoma.prototype.saveMarker = function(savedata) {
@@ -28,9 +24,10 @@ Dokoma.prototype.saveMarker = function(savedata) {
     .catch(function(error) {
       console.error("Error adding document: ", error);
     });
+  } else {
+      console.warn('savedata is null');
   }
 }
-
 
 // サインイン、サインアウト時にトリガ
 Dokoma.prototype.onAuthStateChanged = function(user) {
@@ -40,20 +37,10 @@ Dokoma.prototype.onAuthStateChanged = function(user) {
   }
 };
 
-/*
-// Mapを表示
-Dokoma.prototype.displayMap = function(key, name, locate_ido, locate_kdo) {
-  var div = document.getElementById(key);
-  div.querySelector('#map').textContent = myMap;
-};
-*/
-
 // Firebase SDKの動作チェック
 Dokoma.prototype.checkSetup = function() {
   if (!window.firebase || !(firebase.app instanceof Function) || !firebase.app().options) {
-    window.alert('You have not configured and imported the Firebase SDK. ' +
-      'Make sure you go through the codelab setup instructions and make ' +
-      'sure you are running the codelab using `firebase serve`');
+    window.alert('Firebase SDKが正常に動いていません。firebase serveを実行してコードラボの実行を確認してください。');
   }
 };
 
@@ -61,7 +48,6 @@ Dokoma.prototype.checkSetup = function() {
 Dokoma.prototype.initFirebase = function() {
   // ★DB接続
   this.firestore = firebase.firestore();
-//   Dokoma.firestore = firebase.firestore();
 
   // ★認証
   this.auth = firebase.auth();
@@ -69,6 +55,32 @@ Dokoma.prototype.initFirebase = function() {
 };
 
 window.onload = function() {
-  // Initializes Dokoma.
+  // Dokomaの初期化
   window.dokoma = new Dokoma();
 };
+
+
+/***** 関数の説明 *****/
+
+/*
+// Dokomaファンクションを定義
+function Dokoma() {
+  // いわゆるmain部分として扱っている
+  this.         = Dokoma
+  setMyMarker() = mapapi.jsに裸で定義してある関数(手抜き)
+}
+
+// Dokoma.ファンクションに処理(prototype)を追加
+// × 必要な関数分
+Dokoma.prototype.処理名 = function(value) {
+  // 処理
+}
+
+// window.onloadをトリガにDokomaが生成されるよう設定する
+// 外部ファイルからは
+// dokoma.処理名();
+// で、Dokomaオブジェクトの処理を呼び出し可能
+window.onload = function() {
+  window.dokoma = new Dokoma();
+}
+*/

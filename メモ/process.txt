@@ -1,0 +1,23 @@
+処理概要
+
+-- A.自動処理
+1.部屋URL生成
+　・URLを表示して設定
+
+1-2.地図ページにアクセス時認証
+
+2.位置情報取得
+　→google apiに渡してピンを立てる
+　→firebase storeに登録
+　name, lng, lat, time
+
+3.他ユーザデータ読み込み
+  →google apiに渡してピンを立てる
+
+-- B.部屋破棄
+
+
+1.
+
+firebase console
+https://console.firebase.google.com/project/dokoma-clone/overview
