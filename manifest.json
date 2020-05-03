@@ -1,6 +1,6 @@
 {
-  "name": "Easy Chat",
-  "short_name": "Easy Chat",
+  "name": "Dokoma",
+  "short_name": "Dokoma",
   "start_url": "/index.html",
   "display": "standalone",
   "icons": [

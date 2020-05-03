@@ -1,5 +1,5 @@
 // mapapi.js
-'use strict';
+// 'use strict';
 
 /***** 関数構造の説明を最下部に記載 *****/
 
@@ -12,7 +12,7 @@ function setMyMarker() {
     var myPos = {};
     var date = new Date();
     // 取得データの整理
-    myData = position.coords;
+    myData = pos.coords;
     // 自分のデータの整理
     myPos['lat'] = myData.latitude;        // 緯度
     myPos['lng'] = myData.longitude;       // 経度
@@ -82,10 +82,9 @@ function setMyMarker() {
   // success : 成功時処理
   // error   : 失敗時処理
   // options : 失敗時設定
-  navigator.geolocation.getCurrentPosition(success, error);
 
   /**  /実行部  **/
-  }
+  navigator.geolocation.getCurrentPosition(success, error);
 }
 
 // 登録済マーカーを表示

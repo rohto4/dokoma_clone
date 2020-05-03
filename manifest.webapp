@@ -16,7 +16,7 @@
   "locales": {
     "ja": {
       "name": "Dokoma",
-      "description": "Create chat app easily using Firebase 2.0"
+      "description": "Create GoogleMap app easily using Firebase 2.0"
     }
   }
 }

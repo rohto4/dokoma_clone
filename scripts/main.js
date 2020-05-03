@@ -1,6 +1,6 @@
 // main.js
 // firebase周りの処理を記載するファイル
-'use strict';
+// 'use strict';
 
 /***** 関数構造の説明を最下部に記載 *****/
 

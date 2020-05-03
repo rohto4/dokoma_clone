@@ -1,0 +1,38 @@
+Firebaseアプリの(ほぼ)最小構成
+★ => firebase特有のもの
+
+-----
+
+.git       # git管理ファイル
+.gitignore # gitで管理しないファイルを定義
+
+# 通常のwebサイドセット
+scripts scriptフォルダ
+ └main.js # ★ firebaseライブラリを使用
+ └mapapi.js # GoogleMapAPIを使用
+styles # cssフォルダ
+ └main.css
+index.html # トップページ
+README.md
+LICENSE
+
+# ★ firebaseの構成を記載
+firebase.json
+
+# アプリのプラグイン情報を記載
+# 実行可能コードではない
+# サイト情報を取得する際に使用されることがある
+manifest.json
+
+# アプリの開発関連情報を記載
+# 同上
+manifest.webapp
+
+-----
+
+cloudshellに載せると生成されるもの
+images
+ └画像ファイル # firebase.jsonで定義したもの
+firebase-debug.log # ★ 名の通り
+
+-----
