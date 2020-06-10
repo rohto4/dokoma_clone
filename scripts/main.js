@@ -1,25 +1,51 @@
 // main.js
 // firebase周りの処理を記載するファイル
-// 'use strict';
 
 /***** 関数構造の説明を最下部に記載 *****/
 
 // Dokomaファンクションの初期化
 function Dokoma() {
   this.checkSetup();
+
+  // 要素を追加
+  this.userPic = document.getElementById('user-pic');
+  this.userName = document.getElementById('user-name');
+  this.signInButton = document.getElementById('sign-in');
+  this.signOutButton = document.getElementById('sign-out');
+  this.signInSnackbar = document.getElementById('must-signin-snackbar');
+
+  // 関数をボタンにバインド
+  this.signOutButton.addEventListener('click', this.signOut.bind(this));
+  this.signInButton.addEventListener('click', this.signIn.bind(this));
+
   this.initFirebase();
-  setMyMarker();
+
 }
 
+// Firebaseの設定
+Dokoma.prototype.initFirebase = function () {
+  console.log('main.js');
+  console.log('initFirebase');
+  // ★DB接続
+  this.firestore = firebase.firestore();
+
+  // ★認証
+  this.auth = firebase.auth();
+  this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+};
+
+
 // 現在地を設定した時、fasebaseに情報を登録する
-Dokoma.prototype.saveMarker = function(savedata) {
+Dokoma.prototype.saveMarker = function (saveData) {
+  console.log('main.js');
+  console.log('saveMarker');
   // ★DB書き込み
-  if (savedata) {
-    this.firestore.collection('userMarker').add({
-      name: savedata['name'],
-      lat: savedata['lat'],
-      lng: savedata['lng'],
-      time: savedata['time']
+  if (saveData) {
+    this.firestore.collection('userMarker').doc(saveData).add({
+      name: saveData['name'],
+      lat: saveData['lat'],
+      lng: saveData['lng'],
+      time: saveData['time']
     })
     .catch(function(error) {
       console.error("Error adding document: ", error);
@@ -29,34 +55,90 @@ Dokoma.prototype.saveMarker = function(savedata) {
   }
 }
 
+// 現在ログインしているユーザのピンを消去する
+Dokoma.prototype.deleteMarker = function (deleteData) {
+  console.log('main.js');
+  console.log('deleteMarker');
+
+  deleteDocName = deleteData['name'];
+  this.firestore.collection("userMarker").doc(deleteDocName).delete().then(function () {
+    console.log("Document successfully deleted!");
+  }).catch(function (error) {
+    console.error("Error removing document: ", error);
+  });
+}
+
+// 保存されているマーカー情報を全て返す
+Dokoma.prototype.getMarkerAll = function () {
+  console.log('main.js');
+  console.log('getMarkerAll');
+
+  pins = db.collection("userMarker").where("name", "==", true).get();
+  return pins;
+}
+
+
 // サインイン、サインアウト時にトリガ
-Dokoma.prototype.onAuthStateChanged = function(user) {
+Dokoma.prototype.onAuthStateChanged = function (user) {
+  console.log('main.js');
+  console.log('onAuthStateChanged');
+
   if (user) {
+    // ログイン時処理
     var userName = user.displayName;
     this.userName.textContent = userName;
+    this.userPic.removeAttribute('hidden');
+    this.userName.removeAttribute('hidden');
+    // サインインボタン非表示
+    this.signInButton.setAttribute('hidden', 'true');
+    // サインアウトボタン表示
+    this.signOutButton.removeAttribute('hidden');
+
+    dokomaMapapi.setMyMarker(user);
+
+  } else {
+    // ログアウト時処理
+    this.userPic.setAttribute('hidden', 'true');
+    this.userName.setAttribute('hidden', 'true');
+    // サインインボタン表示
+    this.signInButton.removeAttribute('hidden');
+    // サインアウトボタン非表示
+    this.signOutButton.setAttribute('hidden', 'true');
+
+    // ログイン画面に遷移
+    window.location.href = './login.html';
   }
 };
 
 // Firebase SDKの動作チェック
-Dokoma.prototype.checkSetup = function() {
+Dokoma.prototype.checkSetup = function () {
+  console.log('main.js');
+  console.log('checkSetup');
   if (!window.firebase || !(firebase.app instanceof Function) || !firebase.app().options) {
-    window.alert('Firebase SDKが正常に動いていません。firebase serveを実行してコードラボの実行を確認してください。');
+    window.alert('Firebase SDKが正常に動いていません。');
   }
 };
 
-// Firebaseの設定
-Dokoma.prototype.initFirebase = function() {
-  // ★DB接続
-  this.firestore = firebase.firestore();
-
-  // ★認証
-  this.auth = firebase.auth();
-  this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
+// サインイン
+Dokoma.prototype.signIn = function () {
+  console.log('main.js');
+  console.log('sign-in');
+  var provider = new firebase.auth.GoogleAuthProvider();
+  this.auth.signInWithPopup(provider);
 };
 
-window.onload = function() {
+// サインアウト
+Dokoma.prototype.signOut = function () {
+  console.log('main.js');
+  console.log('sign-out');
+  this.auth.signOut();
+};
+
+
+window.onload = function () {
   // Dokomaの初期化
   window.dokoma = new Dokoma();
+  window.dokomaMapapi = new DokomaMapapi();
 };
 
 

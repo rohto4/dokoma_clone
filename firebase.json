@@ -23,6 +23,15 @@
       "source": "/login",
       "destination": "/login.html",
       "type": 301
-    }]
+    }],
+    "firestore": {
+      "rules": "firestore.rules"
+    },
+    "emulators": {
+      "firestore": {
+        "port": 8080
+      }
+    }
   }
+
 }
