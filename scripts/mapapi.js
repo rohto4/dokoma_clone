@@ -20,14 +20,14 @@ function DokomaMapapi () {
 DokomaMapapi.prototype.initMap = function () {
   console.log('initMap');
   // My位置情報取得
-  dokomaMapapi.getMarkerData();
+  dokomaMapapi.setMyMarkerData();
   // Myマーカーの設定
-  dokomaMapapi.getMyMarker();
+  dokomaMapapi.setMyMarker();
   // My吹き出しの設定
-  dokomaMapapi.getMyInfoWindow();
+  dokomaMapapi.setMyInfoWindow();
 
   // 全登録済み位置情報の取得 firestoreクラスを使用
-  dokomaMapapi.getMembersMarkerData();
+  dokomaMapapi.setMembersMarkerData();
   // 全マーカーの設定
   dokomaMapapi.setMembersMarker();
   // 全吹き出しの設定
@@ -37,12 +37,11 @@ DokomaMapapi.prototype.initMap = function () {
   dokomaMapapi.createMap();
 }
 
-// 位置情報を取得し、広域変数に格納する
-DokomaMapapi.prototype.getMarkerData = function () {
-  console.log('getMarkerData');
+// 位置情報を取得し、広域変数に設定する
+DokomaMapapi.prototype.setMyMarkerData = function () {
+  console.log('setMyMarkerData');
 
   function success (pos) {
-    var position = {};
     myData = pos.coords;
     markerData[0]['lat'] = myData.latitude;  // 緯度
     markerData[0]['lng'] = myData.longitude; // 経度
@@ -51,10 +50,11 @@ DokomaMapapi.prototype.getMarkerData = function () {
   function error (err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
   }
-  // ブラウザから位置情報を取得
+  // ブラウザを通して位置情報を取得
   // option省略
   navigator.geolocation.getCurrentPosition(success, error);
 }
+
 
 // 登録済マーカーを返す
 DokomaMapapi.prototype.getMembersMarkerData = function () {
