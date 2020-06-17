@@ -4,6 +4,7 @@
 
 var map; // 描画用マップオブジェクト
 var userName;
+var markTime;
 var myLatLng;
 // [0]:自分 [1]:その他
 var markerData = [{}]; // マーカーの基となる情報
@@ -12,7 +13,6 @@ var infoWindow = [{}]; // 吹き出し
 
 function DokomaMapapi () {
   this.initFirebase();
-  this.initMap();
 }
 
 // マップの初期化
@@ -25,16 +25,18 @@ DokomaMapapi.prototype.initMap = function () {
   // 地図生成、描画
   this.createMap();
 
+  // Myマーカーの設定
+  this.setMyMarker();
   // My吹き出しの設定
   this.setMyInfoWindow();
   // Firestoreに登録済みのMyデータを更新
   this.updateMyMarkerData();
 
-  // 全登録済み位置情報の取得 main.jsを使用
+  // 登録済み位置情報の取得 main.jsを使用
   this.setMembersData();
-  // 全マーカーの設定
+  // 登録済みマーカーの設定
   this.setMembersMarker();
-  // 全吹き出しの設定
+  // 登録済み吹き出しの設定
   this.setMembersInfoWindow();
 
 }
@@ -76,7 +78,7 @@ DokomaMapapi.prototype.createMap = function () {
 }
 
 // 自分のマーカーオブジェクトを設定
-DokomaMapapi.prototype.setMyMarkar = function () {
+DokomaMapapi.prototype.setMyMarker = function () {
   console.log('setMyMarkar');
 
   // マーカーオブジェクトを生成
@@ -97,9 +99,9 @@ DokomaMapapi.prototype.setMyInfoWindow = function () {
   // 吹き出し情報を設定
   var hourStr = ('0' + date.getHours()).slice(-2);  // 頭に"0"を付けて、下2桁を切り取り
   var minStr = ('0' + date.getMinutes()).slice(-2); // 同上
-  var markTime = hourStr + ":" + minStr;
+  this.markTime = hourStr + ":" + minStr;
 
-  var content = "[" + markTime + "] " + this.userName;
+  var content = "[" + this.markTime + "] " + this.userName;
 
   // ピンオブジェクトを格納
   infoWindow[0] = new google.maps.InfoWindow({
@@ -122,19 +124,17 @@ DokomaMapapi.prototype.setMyInfoWindow = function () {
 DokomaMapapi.prototype.updateMyMarkerData = function () {
   console.log('updateMyMarkerData');
   // 既に自分の位置がfirestoreに登録されていれば削除
-  var deleteData = {
-    'name': userName
-  }
-  this.dokoma.deleteMarker(deleteData);
+  window.dokoma.deleteMarker("InitMarker");
 
+  console.log("aaaaaa")
   // 新しい自分の位置をfirestoreに登録
   var saveData = {
-    'name': userName,
+    'name': this.userName,
     'lat': markerData[0]['lat'],
     'lng': markerData[0]['lng'],
-    'time': markTime
+    'time': this.markTime
   };
-  this.dokoma.insertMarker(saveData);
+  window.dokoma.insertMarker(saveData);
 }
 
 // Firestoreから登録済み位置情報を読み込み、広域変数に格納
@@ -198,6 +198,8 @@ DokomaMapapi.prototype.onAuthStateChanged = function (user) {
   if (user) {
     // ログイン時処理
     this.userName = user.displayName;
+    // ログイン処理後にマップを生成
+    this.initMap();
   }
 };
 
