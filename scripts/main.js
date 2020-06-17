@@ -4,7 +4,7 @@
 /***** 関数構造の説明を最下部に記載 *****/
 
 // Dokomaファンクションの初期化
-function Dokoma() {
+function Dokoma () {
   this.checkSetup();
 
   // 要素を追加
@@ -26,20 +26,20 @@ function Dokoma() {
 Dokoma.prototype.initFirebase = function () {
   console.log('main.js');
   console.log('initFirebase');
-  // ★DB接続
+  // DB接続
   this.firestore = firebase.firestore();
 
-  // ★認証
+  // 認証
   this.auth = firebase.auth();
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
 };
 
 
-// 現在地を設定した時、fasebaseに情報を登録する
-Dokoma.prototype.saveMarker = function (saveData) {
+// fasestoreに位置情報を登録する
+Dokoma.prototype.insertMarker = function (saveData) {
   console.log('main.js');
-  console.log('saveMarker');
-  // ★DB書き込み
+  console.log('insertMarker');
+  // 書き込み
   if (saveData) {
     this.firestore.collection('userMarker').doc(saveData).add({
       name: saveData['name'],
@@ -70,22 +70,20 @@ Dokoma.prototype.deleteMarker = function (deleteData) {
 
 // 保存されているマーカー情報を全て返す
 Dokoma.prototype.getMarkerAll = function () {
-  console.log('main.js');
   console.log('getMarkerAll');
 
-  pins = db.collection("userMarker").where("name", "==", true).get();
-  return pins;
+  markers = db.collection("userMarker").where("name", "==", true).get();
+  return markers;
 }
 
 
 // サインイン、サインアウト時にトリガ
 Dokoma.prototype.onAuthStateChanged = function (user) {
-  console.log('main.js');
   console.log('onAuthStateChanged');
 
   if (user) {
     // ログイン時処理
-    var userName = user.displayName;
+    this.userName = user.displayName;
     this.userName.textContent = userName;
     this.userPic.removeAttribute('hidden');
     this.userName.removeAttribute('hidden');
@@ -93,8 +91,6 @@ Dokoma.prototype.onAuthStateChanged = function (user) {
     this.signInButton.setAttribute('hidden', 'true');
     // サインアウトボタン表示
     this.signOutButton.removeAttribute('hidden');
-
-    dokomaMapapi.setMyMarker(user);
 
   } else {
     // ログアウト時処理
@@ -112,16 +108,15 @@ Dokoma.prototype.onAuthStateChanged = function (user) {
 
 // Firebase SDKの動作チェック
 Dokoma.prototype.checkSetup = function () {
-  console.log('main.js');
   console.log('checkSetup');
   if (!window.firebase || !(firebase.app instanceof Function) || !firebase.app().options) {
     window.alert('Firebase SDKが正常に動いていません。');
   }
+
 };
 
 // サインイン
 Dokoma.prototype.signIn = function () {
-  console.log('main.js');
   console.log('sign-in');
   var provider = new firebase.auth.GoogleAuthProvider();
   this.auth.signInWithPopup(provider);
@@ -129,7 +124,6 @@ Dokoma.prototype.signIn = function () {
 
 // サインアウト
 Dokoma.prototype.signOut = function () {
-  console.log('main.js');
   console.log('sign-out');
   this.auth.signOut();
 };
@@ -137,8 +131,8 @@ Dokoma.prototype.signOut = function () {
 
 window.onload = function () {
   // Dokomaの初期化
-  window.dokoma = new Dokoma();
-  window.dokomaMapapi = new DokomaMapapi();
+  dokoma = new Dokoma();
+  dokomaMapapi = new DokomaMapapi();
 };
 
 
