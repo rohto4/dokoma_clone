@@ -24,7 +24,6 @@ function Dokoma () {
 
 // Firebaseの設定
 Dokoma.prototype.initFirebase = function () {
-  console.log('main.js');
   console.log('initFirebase');
   // DB接続
   this.firestore = firebase.firestore();
@@ -34,12 +33,26 @@ Dokoma.prototype.initFirebase = function () {
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
 };
 
+// 現在ログインしているユーザのピンを消去する
+Dokoma.prototype.deleteMarker = function (deleteData) {
+  console.log('deleteMarker');
+
+  console.log(deleteData);
+  deleteDocName = deleteData['name'];
+  this.firestore.collection("userMarker").doc(deleteDocName).delete().then(function () {
+    console.log("Document successfully deleted!");
+  }).catch(function (error) {
+    console.error("Error removing document: ", error);
+  });
+}
 
 // fasestoreに位置情報を登録する
 Dokoma.prototype.insertMarker = function (saveData) {
-  console.log('main.js');
   console.log('insertMarker');
   // 書き込み
+
+  console.log(saveData);
+
   if (saveData) {
     this.firestore.collection('userMarker').doc(saveData).add({
       name: saveData['name'],
@@ -55,18 +68,6 @@ Dokoma.prototype.insertMarker = function (saveData) {
   }
 }
 
-// 現在ログインしているユーザのピンを消去する
-Dokoma.prototype.deleteMarker = function (deleteData) {
-  console.log('main.js');
-  console.log('deleteMarker');
-
-  deleteDocName = deleteData['name'];
-  this.firestore.collection("userMarker").doc(deleteDocName).delete().then(function () {
-    console.log("Document successfully deleted!");
-  }).catch(function (error) {
-    console.error("Error removing document: ", error);
-  });
-}
 
 // 保存されているマーカー情報を全て返す
 Dokoma.prototype.getMarkerAll = function () {
@@ -81,10 +82,10 @@ Dokoma.prototype.getMarkerAll = function () {
 Dokoma.prototype.onAuthStateChanged = function (user) {
   console.log('onAuthStateChanged');
 
+  console.log(user);
   if (user) {
     // ログイン時処理
-    this.userName = user.displayName;
-    this.userName.textContent = userName;
+    this.userName.textContent = user.displayName;
     this.userPic.removeAttribute('hidden');
     this.userName.removeAttribute('hidden');
     // サインインボタン非表示

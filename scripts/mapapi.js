@@ -4,15 +4,15 @@
 
 var map; // 描画用マップオブジェクト
 var userName;
+var markTime;
 var myLatLng;
 // [0]:自分 [1]:その他
-var markerData = [{}]; // マーカーの基となる情報
+var markerData = [{ 'lat': 1, 'lng': 2 }, { 'lat': 3, 'lng': 4 }]; // マーカーの基となる情報
 var marker = [{}]; // マーカーオブジェクト（ピン）
 var infoWindow = [{}]; // 吹き出し
 
 function DokomaMapapi () {
   this.initFirebase();
-  this.initMap();
 }
 
 // マップの初期化
@@ -21,9 +21,10 @@ DokomaMapapi.prototype.initMap = function () {
   console.log('initMap');
   // My位置情報取得
   this.setMyData();
-
   // 地図生成、描画
   this.createMap();
+  // Myマーカーの設定
+  this.setMyMarker();
 
   // My吹き出しの設定
   this.setMyInfoWindow();
@@ -44,9 +45,13 @@ DokomaMapapi.prototype.setMyData = function () {
   console.log('setMyData');
 
   function success (pos) {
+    console.log('ここが遅く実行される');
     myData = pos.coords;
-    markerData[0]['lat'] = myData.latitude;  // 緯度
-    markerData[0]['lng'] = myData.longitude; // 経度
+    // lat 経度  lng 経度
+    markerData[0] = {
+      'lat': myData.latitude, 'lng': myData.longitude
+    }
+    console.log(markerData[0]['lat']);
     // 位置情報を生成
     myLatLng = new google.maps.LatLng(markerData[0]['lat'], markerData[0]['lng']); // 地図の中心座標
   }
@@ -56,7 +61,9 @@ DokomaMapapi.prototype.setMyData = function () {
   }
   // ブラウザを通して位置情報を取得
   // option省略
-  navigator.geolocation.getCurrentPosition(success, error);
+  await new Promise((success, error) => {
+    navigator.geolocation.getCurrentPosition(success, error);
+  });
 }
 
 // 地図生成、描画
@@ -73,10 +80,20 @@ DokomaMapapi.prototype.createMap = function () {
   dispMapArea = document.getElementById('map');
   // 地図生成、描画
   map = new google.maps.Map(dispMapArea, mapOptions);
+
+  function s () {
+    console.log('function s');
+  }
+  function e () {
+    console.log('function e');
+  }
+  s();
+
+  e();
 }
 
 // 自分のマーカーオブジェクトを設定
-DokomaMapapi.prototype.setMyMarkar = function () {
+DokomaMapapi.prototype.setMyMarker = function () {
   console.log('setMyMarkar');
 
   // マーカーオブジェクトを生成
@@ -87,7 +104,6 @@ DokomaMapapi.prototype.setMyMarkar = function () {
   });
 }
 
-
 // firestoreに登録済みの吹き出し情報を読み込み、広域変数に格納
 DokomaMapapi.prototype.setMyInfoWindow = function () {
   console.log('setMyInfoWindow');
@@ -97,14 +113,16 @@ DokomaMapapi.prototype.setMyInfoWindow = function () {
   // 吹き出し情報を設定
   var hourStr = ('0' + date.getHours()).slice(-2);  // 頭に"0"を付けて、下2桁を切り取り
   var minStr = ('0' + date.getMinutes()).slice(-2); // 同上
-  var markTime = hourStr + ":" + minStr;
+  this.markTime = hourStr + ":" + minStr;
 
-  var content = "[" + markTime + "] " + this.userName;
+  var content = "[" + this.markTime + "] " + this.userName;
 
   // ピンオブジェクトを格納
   infoWindow[0] = new google.maps.InfoWindow({
     content: content
   });
+  console.log(infoWindow[0]);
+  console.log(marker[0]);
   // 吹き出しを開く
   infoWindow[0].open(map, marker[0]);
 
@@ -123,18 +141,22 @@ DokomaMapapi.prototype.updateMyMarkerData = function () {
   console.log('updateMyMarkerData');
   // 既に自分の位置がfirestoreに登録されていれば削除
   var deleteData = {
-    'name': userName
+    'name': this.userName
   }
-  this.dokoma.deleteMarker(deleteData);
+  dokoma.deleteMarker(deleteData);
 
+  console.log('markerData[0]');
+  console.log(markerData[0]['lat']);
   // 新しい自分の位置をfirestoreに登録
   var saveData = {
-    'name': userName,
+    'name': this.userName,
     'lat': markerData[0]['lat'],
     'lng': markerData[0]['lng'],
-    'time': markTime
+    'time': this.markTime
   };
-  this.dokoma.insertMarker(saveData);
+
+  console.log(saveData);
+  dokoma.insertMarker(saveData);
 }
 
 // Firestoreから登録済み位置情報を読み込み、広域変数に格納
@@ -188,6 +210,7 @@ DokomaMapapi.prototype.initFirebase = function () {
 
   // 認証
   this.auth = firebase.auth();
+
   this.auth.onAuthStateChanged(this.onAuthStateChanged.bind(this));
 };
 
@@ -198,6 +221,7 @@ DokomaMapapi.prototype.onAuthStateChanged = function (user) {
   if (user) {
     // ログイン時処理
     this.userName = user.displayName;
+    this.initMap();
   }
 };
 
