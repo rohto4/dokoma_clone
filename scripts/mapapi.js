@@ -26,16 +26,18 @@ DokomaMapapi.prototype.initMap = function () {
   // Myマーカーの設定
   this.setMyMarker();
 
+  // Myマーカーの設定
+  this.setMyMarker();
   // My吹き出しの設定
   this.setMyInfoWindow();
   // Firestoreに登録済みのMyデータを更新
   this.updateMyMarkerData();
 
-  // 全登録済み位置情報の取得 main.jsを使用
+  // 登録済み位置情報の取得 main.jsを使用
   this.setMembersData();
-  // 全マーカーの設定
+  // 登録済みマーカーの設定
   this.setMembersMarker();
-  // 全吹き出しの設定
+  // 登録済み吹き出しの設定
   this.setMembersInfoWindow();
 
 }
@@ -140,6 +142,7 @@ DokomaMapapi.prototype.setMyInfoWindow = function () {
 DokomaMapapi.prototype.updateMyMarkerData = function () {
   console.log('updateMyMarkerData');
   // 既に自分の位置がfirestoreに登録されていれば削除
+<<<<<<< HEAD
   var deleteData = {
     'name': this.userName
   }
@@ -147,6 +150,11 @@ DokomaMapapi.prototype.updateMyMarkerData = function () {
 
   console.log('markerData[0]');
   console.log(markerData[0]['lat']);
+=======
+  window.dokoma.deleteMarker("InitMarker");
+
+  console.log("aaaaaa")
+>>>>>>> 3f216e002eeda168d90060d971858ad30a0dcbf4
   // 新しい自分の位置をfirestoreに登録
   var saveData = {
     'name': this.userName,
@@ -154,9 +162,13 @@ DokomaMapapi.prototype.updateMyMarkerData = function () {
     'lng': markerData[0]['lng'],
     'time': this.markTime
   };
+<<<<<<< HEAD
 
   console.log(saveData);
   dokoma.insertMarker(saveData);
+=======
+  window.dokoma.insertMarker(saveData);
+>>>>>>> 3f216e002eeda168d90060d971858ad30a0dcbf4
 }
 
 // Firestoreから登録済み位置情報を読み込み、広域変数に格納
@@ -221,6 +233,10 @@ DokomaMapapi.prototype.onAuthStateChanged = function (user) {
   if (user) {
     // ログイン時処理
     this.userName = user.displayName;
+<<<<<<< HEAD
+=======
+    // ログイン処理後にマップを生成
+>>>>>>> 3f216e002eeda168d90060d971858ad30a0dcbf4
     this.initMap();
   }
 };

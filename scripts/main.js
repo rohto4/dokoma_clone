@@ -46,6 +46,7 @@ Dokoma.prototype.deleteMarker = function (deleteData) {
   });
 }
 
+<<<<<<< HEAD
 // fasestoreに位置情報を登録する
 Dokoma.prototype.insertMarker = function (saveData) {
   console.log('insertMarker');
@@ -68,6 +69,20 @@ Dokoma.prototype.insertMarker = function (saveData) {
   }
 }
 
+=======
+
+// 現在ログインしているユーザのピンを消去する
+Dokoma.prototype.deleteMarker = function (deleteDocName) {
+  console.log('main.js');
+  console.log('deleteMarker');
+
+  this.firestore.collection("userMarker").doc(deleteDocName).delete().then(function () {
+    console.log("Document successfully deleted!");
+  }).catch(function (error) {
+    console.error("Error removing document: ", error);
+  });
+}
+>>>>>>> 3f216e002eeda168d90060d971858ad30a0dcbf4
 
 // 保存されているマーカー情報を全て返す
 Dokoma.prototype.getMarkerAll = function () {
@@ -77,6 +92,29 @@ Dokoma.prototype.getMarkerAll = function () {
   return markers;
 }
 
+// fasestoreに位置情報を登録する
+Dokoma.prototype.insertMarker = function (saveData) {
+  console.log('main.js');
+  console.log('insertMarker');
+  // 書き込み
+  if (saveData) {
+
+    console.log("saveData[]");
+    console.log(saveData['name']);
+    console.log(saveData['lat']);
+    console.log(saveData['lng']);
+    console.log(saveData['time']);
+    this.firestore.collection('userMarker').doc(saveData['name']).add({
+      name: saveData['name'],
+      time: saveData['time']
+    })
+      .catch(function (error) {
+        console.error("Error adding document: ", error);
+      });
+  } else {
+    console.warn('savedata is null');
+  }
+}
 
 // サインイン、サインアウト時にトリガ
 Dokoma.prototype.onAuthStateChanged = function (user) {
@@ -85,7 +123,12 @@ Dokoma.prototype.onAuthStateChanged = function (user) {
   console.log(user);
   if (user) {
     // ログイン時処理
+<<<<<<< HEAD
     this.userName.textContent = user.displayName;
+=======
+    console.log(user.displayName);
+    this.userName.textContent = user.displayName
+>>>>>>> 3f216e002eeda168d90060d971858ad30a0dcbf4
     this.userPic.removeAttribute('hidden');
     this.userName.removeAttribute('hidden');
     // サインインボタン非表示
@@ -132,8 +175,8 @@ Dokoma.prototype.signOut = function () {
 
 window.onload = function () {
   // Dokomaの初期化
-  dokoma = new Dokoma();
-  dokomaMapapi = new DokomaMapapi();
+  window.dokoma = new Dokoma();
+  window.dokomaMapapi = new DokomaMapapi();
 };
 
 
